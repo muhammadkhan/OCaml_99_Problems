@@ -1,11 +1,9 @@
 let pack (lst : 'a list) : 'a list list =
-  let lst' = List.map (fun x -> [x]) lst in
-  let rec pack' lst =
-    match lst with
-    | [] 
-    | [_] -> lst 
-    | h1::h2::t ->
-       if List.hd h1 = List.hd h2 then (h1@h2):: (pack' t)
-       else h1::h2::(pack' t)
+  let f cur1 (acc, cur2) =
+    match cur2 with
+    | None -> ([[cur1]], Some(cur1))
+    | Some v ->
+       if v = cur1 then ((cur1::(List.hd acc))::(List.tl acc), cur2)
+       else ([cur1]::acc, Some cur1)
   in
-  pack' lst'
+  fst (List.fold_right f lst ([], None))
